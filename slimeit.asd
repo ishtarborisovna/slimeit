@@ -1,5 +1,5 @@
-(asdf:defsystem :fistmage-game
-  :description "FistMage Game"
+(asdf:defsystem :slimeit
+  :description "Slime It"
   :license "MIT"
   :version "1.0.0"
   :author "Elena Voloshina"

@@ -1,2 +1,0 @@
-# slimeit
-the game
