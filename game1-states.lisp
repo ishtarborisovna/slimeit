@@ -13,28 +13,109 @@
 (defparameter *x-canvas* 450)
 (defparameter *y-canvas* 50)
 (defparameter *width-paddle* 80)
-(defparameter *height-paddle* 20)
-(defparameter *height-indent* 10)
+(defparameter *height-paddle* 10)
+(defparameter *height-indent* 5)
 (defparameter *x-circle* (+ *x-canvas* (/ *width-canvas* 2) (/ *cant* 2)))
 (defparameter *y-circle* (+ *y-canvas* (/ *cant* 2) *radius* *height-paddle* *height-indent*))
 (defparameter *x-paddle* (- (+ *x-canvas* (/ *width-canvas* 2) (/ *cant* 2)) (/ *width-paddle* 2)))
 (defparameter *y-paddle* (+ *y-canvas* (/ *cant* 2) *height-indent*))
-(defparameter *dx-circle* 1)
-(defparameter *dy-circle* 1)
-(defparameter *dx-paddle* 1)
+(defparameter *dx-circle* 6)
+(defparameter *dy-circle* 6)
+(defparameter *dx-paddle* 10)
+(defparameter *width-brick* 80)
+(defparameter *height-brick* 30)
+(defparameter *width-indent-brick* 13)
+(defparameter *height-indent-brick* 12)
+(defparameter status-mass (make-array '(20)))
+
+
+
+(defmethod initialize-instance :after ((this game1-state) &key)
+  (bind-button :A :pressed
+               (lambda ()
+		 (if (> (- *x-paddle* *dx-paddle*) *x-canvas*)
+                     (setf *x-paddle* (- *x-paddle* *dx-paddle*)))))
+
+  (bind-button :D :pressed
+               (lambda ()
+		 (if (<= (+ *x-paddle* *dx-paddle* *width-paddle*) (+ *x-canvas* *width-canvas*))
+                     (setf *x-paddle* (+ *x-paddle* *dx-paddle*)))))
+
+  (bind-button :space :pressed
+               (lambda ()
+                 (setf *x-circle* (+ *x-canvas* (/ *width-canvas* 2) (/ *cant* 2)))
+	         (setf *y-circle* (+ *y-canvas* (/ *cant* 2) *radius* *height-paddle* *height-indent*))
+                 (setf *dx-circle* 6)
+                 (setf *dy-circle* 6)
+                 (setf *x-paddle* (- (+ *x-canvas* (/ *width-canvas* 2) (/ *cant* 2)) (/ *width-paddle* 2)))
+                 (setf *y-paddle* (+ *y-canvas* (/ *cant* 2) *height-indent*))
+                 (loop for j from 0 upto 19
+                       do (progn
+                            (setf (aref status-mass j) 1)))
+                 ))
+  (loop for j from 0 upto 19
+        do (progn
+             (setf (aref status-mass j) 1)))
+  )
+
 
 (defun circle-move ()
-  (if (or (> (+ *x-circle* *dx-circle*) (+ *x-canvas* *width-canvas* (/ *cant* 2)))
-          (< (+ *x-circle* *dx-circle*) (+ *x-canvas* (/ *cant* 2))))
+  (if (or (> (+ *x-circle* *dx-circle*) (+ *x-canvas* *width-canvas*))
+          (< (+ *x-circle* *dx-circle*) (+ *x-canvas* *cant*)))
       (setf *dx-circle* (* *dx-circle* -1)))
   
-  (if (or (> (+ *y-circle* *dy-circle*) (+ *y-canvas* *height-canvas* (/ *cant* 2)))
-          (< (+ *y-circle* *dy-circle*) (+ *y-canvas* (/ *cant* 2))))
+  (if (> (+ *y-circle* *dy-circle*) (+ *y-canvas* *height-canvas*))
       (setf *dy-circle* (* *dy-circle* -1)))
+
+  (if (< (+ *y-circle* *dy-circle*) (+ *y-canvas* *cant* *height-indent* *height-paddle*))      
+      (if (and (> *x-circle* *x-paddle*) (< *x-circle* (+ *x-paddle* *width-paddle*)))
+          (setf *dy-circle* (* *dy-circle* -1))     
+      (and (setf *x-circle* (+ *x-canvas* (/ *width-canvas* 2) (/ *cant* 2)))
+           (setf *y-circle* (+ *y-canvas* (/ *cant* 2) *radius* *height-paddle* *height-indent*))
+           (setf *dx-circle* 0)
+           (setf *dy-circle* 0)
+           (setf *x-paddle* (- (+ *x-canvas* (/ *width-canvas* 2) (/ *cant* 2)) (/ *width-paddle* 2)))
+           (setf *y-paddle* (+ *y-canvas* (/ *cant* 2) *height-indent*))
+           (loop for j from 0 upto 19
+                 do (progn
+                      (setf (aref status-mass j) 1)))
+           )))
   
   (setf *x-circle* (+ *x-circle* *dx-circle*))
-  (setf *y-circle* (+ *y-circle* *dy-circle*))
-  )
+  (setf *y-circle* (+ *y-circle* *dy-circle*)))
+
+
+(defun brick-x (n)
+  (+ *x-canvas* *cant* (* *width-indent-brick* (+ n 1)) (* *width-brick* n)))
+
+(defun brick-y (h)
+  (- (+ *y-canvas* *height-canvas*) (* (+ *height-brick* *height-indent-brick*) (+ h 1))))
+
+(defun brick-in-world (n h)
+  (draw-rect (vec2 (brick-x n) (brick-y h)) *width-brick* *height-brick* :fill-paint (vec4 0.7 0.1 0 (aref status-mass (+ (* h 5) n))) :rounding 5))
+
+
+(defun draw-bricks ()
+  (loop for h from 0 upto 3
+        do (progn
+             (if (and (> (+ *y-circle* *radius*) (brick-y h)) (< (+ *y-circle* *radius*) (+ (brick-y h) *height-brick*)))
+                 (loop for n from 0 upto 4
+                       do (progn
+                            (if (and (> (+ *x-circle* *radius*) (brick-x n)) (< (+ *x-circle* *radius*) (+ (brick-x n) *width-brick*)) (= (aref status-mass (+ (* h 5) n)) 1))
+                                (and 
+                                 (setf (aref status-mass (+ (* h 5) n)) 0)
+                                 (setf *dx-circle* (* *dx-circle* -1))
+                                 (setf *dy-circle* (* *dy-circle* -1))
+                                 )
+                            )
+                                (brick-in-world n h)
+                            )))
+                 (loop for n from 0 upto 4
+                       do (progn
+                            (brick-in-world n h)
+                            )
+		       ))))
+
 
 (defmethod fistmage:draw ((this game1-state))
   (with-slots (started-at) this
@@ -50,6 +131,7 @@
                :fill-paint (vec4 0.4 0.2 0.2 0.9)
                :rounding 5
                )
+    (draw-bricks)
     (draw-circle (vec2 *x-circle* *y-circle*) *radius*
                  :fill-paint (vec4 0 0.8 0 0.9))
     (draw-rect (vec2 (+ *x-canvas* (/ *cant* 2)) (+ *y-canvas* (/ *cant* 2))) 10 10 :fill-paint (vec4 0 0 0 1))
@@ -57,5 +139,6 @@
              
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 
