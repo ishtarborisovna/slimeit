@@ -27,6 +27,7 @@
 (defparameter *width-indent-brick* 13)
 (defparameter *height-indent-brick* 12)
 (defparameter status-mass (make-array '(20)))
+(defparameter *win-game1* 0)
 
 
 (defmethod initialize-instance :after ((this game1-state) &key)
@@ -36,7 +37,8 @@
                      (setf *x-paddle* (- *x-paddle* *dx-paddle*))
                      (setf *x-paddle* (+ *x-canvas* (/ *cant* 2))))
                  (if (and (> *x-circle* *x-paddle*) (< *x-circle* (+ *x-paddle* *width-paddle*)) (< (+ *y-circle* *dy-circle*) (+ *y-canvas* *cant* *height-indent* *height-paddle*)))
-                     (setf *dx-circle* (* *dx-circle* 1.3)))
+                     (and (setf *dy-circle* (* (+ (random 1.0) 0.5) *dy-circle*))
+                          (setf *dx-circle* (- *dx-circle* (+ (random 1.0) 0.5)))))
                  ))
 
   (bind-button :D :pressed
@@ -45,7 +47,8 @@
                      (setf *x-paddle* (+ *x-paddle* *dx-paddle*))
                      (setf *x-paddle* (- (+ *x-canvas* *width-canvas* (/ *cant* 2)) *width-paddle*)))
                  (if (and (> *x-circle* *x-paddle*) (< *x-circle* (+ *x-paddle* *width-paddle*)) (< (+ *y-circle* *dy-circle*) (+ *y-canvas* *cant* *height-indent* *height-paddle*)))
-                     (setf *dx-circle* (* *dx-circle* 1.3)))
+                     (and (setf *dy-circle* (* (+ (random 1.0) 0.5) *dy-circle*))
+                          (setf *dx-circle* (+ *dx-circle* (+ (random 1.0) 0.5)))))
                  ))
 
 
@@ -64,6 +67,8 @@
   (loop for j from 0 upto 19
         do (progn
              (setf (aref status-mass j) 1)))
+  (setf *fade-clarity* 0)
+  (setf *win-game1* 0)
   )
 
 
@@ -77,7 +82,8 @@
 
   (if (< (+ *y-circle* *dy-circle*) (+ *y-canvas* *cant* *height-indent* *height-paddle*))      
       (if (and (> *x-circle* *x-paddle*) (< *x-circle* (+ *x-paddle* *width-paddle*)))
-          (setf *dy-circle* (* *dy-circle* -1))     
+          (and (setf *dy-circle* (* (+ (random 1.0) 0.5) *dy-circle* -1))
+               (setf *dx-circle* (* (+ (random 1.0) 0.5) *dx-circle*)))     
       (and (setf *x-circle* (+ *x-canvas* (/ *width-canvas* 2) (/ *cant* 2)))
            (setf *y-circle* (+ *y-canvas* (/ *cant* 2) *radius* *height-paddle* *height-indent*))
            (setf *dx-circle* 0)
@@ -130,10 +136,10 @@
                             (brick-in-world n h)
                             )))
 
-             (if (and (> *y-circle* (+ (- (brick-y h)  (/ *radius* 1.4)) 0)) (< *y-circle* (+ (- (+ (brick-y h) (/ *radius* 1.4)) 0) *height-brick*)))
+             (if (and (> *y-circle* (+ (- (brick-y h)  (/ *radius* 1.4)) 0)) (< *y-circle* (+ (- (+ (brick-y h) (/ *radius* 1.4)) 0) *height-brick*)))                 
                  (loop for n from 0 upto 4
                        do (progn
-                            (if (and (> *x-circle* (+ (- (brick-x h) (/ *radius* 1.4)) 0)) (< *x-circle* (+ (- (+ (brick-x h) (/ *radius* 1.4)) 0) *width-brick*)) (= (aref status-mass (+ (* h 5) n)) 1))
+                            (if (and (> *x-circle* (+ (- (brick-x n)  (/ *radius* 1.4)) 0)) (< *x-circle* (+ (- (+ (brick-x n) (/ *radius* 1.4)) 0) *width-brick*)) (= (aref status-mass (+ (* h 5) n)) 1))
                                 (and 
                                  (setf (aref status-mass (+ (* h 5) n)) 0)
                                  (setf *dx-circle* (* *dx-circle* -1))
@@ -150,11 +156,27 @@
                             )
 		       ))))
 
+(defun end-game1 ()
+  (if (every #'zerop status-mass)
+      (and (setf *t0* (real-time-seconds))
+	  (setf *win-game1* 1))
+	  ))
+
+
+(defmethod fistmage:act ((this game1-state))
+  (with-slots (started-at) this
+    (if (= *win-game1* 1)
+    (and (setf *fade-clarity* (/ (- (real-time-seconds) *t0* 5) 1))
+    (when (> (- (real-time-seconds) *t0*) 1)
+      (fistmage:transition-to 'cut2-state))))))
+
 
 (defmethod fistmage:draw ((this game1-state))
   (with-slots (started-at) this
+    (end-game1)
     (circle-move)
     (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4))
+    (draw-image (vec2 70 70) :girl)
     (draw-rect (vec2 *x-canvas* *y-canvas*) (+ *width-canvas* *cant*) (+ *height-canvas* *cant*)
                :fill-paint (vec4 1 1 1 0.5)
                :thickness *cant*
@@ -168,6 +190,7 @@
     (draw-bricks)
     (draw-circle (vec2 *x-circle* *y-circle*) *radius*
                  :fill-paint (vec4 0 0.8 0 0.9))
+    (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0 0 0 *fade-clarity*))
     ))
              
 

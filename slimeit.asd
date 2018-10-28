@@ -9,4 +9,6 @@
                (:file "utils")
                (:file "states")
 			   (:file "game1-states")
+			   (:file "localization")
+			   (:file "intrigue")
                (:file "game")))
