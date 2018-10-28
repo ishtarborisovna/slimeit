@@ -2,7 +2,7 @@
 
 
 (fistmage:defgame (slimeit start-state)
-  (:viewport-title "FistMage Example")
+  (:viewport-title "Slime It")
   (:viewport-width 1024)
   (:viewport-height 768))
 

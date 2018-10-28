@@ -6,29 +6,10 @@
 (defclass game1-state ()
   ((started-at :initform (real-time-seconds))))
 
-(defparameter *radius* 15)
-(defparameter *width-canvas* 500)
-(defparameter *height-canvas* 500)
-(defparameter *cant* 20)
-(defparameter *x-canvas* 450)
-(defparameter *y-canvas* 50)
-(defparameter *width-paddle* 100)
-(defparameter *height-paddle* 10)
-(defparameter *height-indent* 5)
-(defparameter *x-circle* (+ *x-canvas* (/ *width-canvas* 2)))
-(defparameter *y-circle* (+ *y-canvas* (/ *cant* 2) *radius* *height-paddle* *height-indent*))
-(defparameter *x-paddle* (- (+ *x-canvas* (/ *width-canvas* 2)) (/ *width-paddle* 2)))
-(defparameter *y-paddle* (+ *y-canvas* (/ *cant* 2) *height-indent*))
-(defparameter *dx-circle* 4)
-(defparameter *dy-circle* 4)
-(defparameter *dx-paddle* 50)
-(defparameter *width-brick* 80)
-(defparameter *height-brick* 30)
-(defparameter *width-indent-brick* 13)
-(defparameter *height-indent-brick* 12)
-(defparameter status-mass (make-array '(20)))
-(defparameter *win-game1* 0)
-
+  
+(defparameter *stroka1* nil)
+(defparameter *pozitionx-girl* -70)
+(defparameter *pozitiony-girl* -70)
 
 (defmethod initialize-instance :after ((this game1-state) &key)
   (bind-button :A :pressed
@@ -54,21 +35,33 @@
 
   (bind-button :space :pressed
                (lambda ()
-                 (setf *x-circle* (+ *x-canvas* (/ *width-canvas* 2) (/ *cant* 2)))
-	         (setf *y-circle* (+ *y-canvas* (/ *cant* 2) *radius* *height-paddle* *height-indent*))
+                 (if (= *win-game1* 0)
+				 (and (setf *x-circle* (+ *x-canvas* (/ *width-canvas* 2) (/ *cant* 2)))
+           (setf *y-circle* (+ *y-canvas* (/ *cant* 2) *radius* *height-paddle* *height-indent*))
                  (setf *dx-circle* 4)
                  (setf *dy-circle* 4)
                  (setf *x-paddle* (- (+ *x-canvas* (/ *width-canvas* 2) (/ *cant* 2)) (/ *width-paddle* 2)))
-                 (setf *y-paddle* (+ *y-canvas* (/ *cant* 2) *height-indent*))
+           (setf *y-paddle* (+ *y-canvas* (/ *cant* 2) *height-indent*))
                  (loop for j from 0 upto 19
                        do (progn
                             (setf (aref status-mass j) 1)))
+				  (setf *stroka1* " ")
+				  ))
+				  (if (= *win-game1* 1)
+				  (and (setf *win-game1* 2)
+				  (setf *t0* (real-time-seconds))))
                  ))
+  (setf *radius* 15)
+   (setf *x-circle* (+ *x-canvas* (/ *width-canvas* 2)))
+(setf *y-circle* (+ *y-canvas* (/ *cant* 2) *radius* *height-paddle* *height-indent*))
+(setf *dx-circle* 0)
+(setf *dy-circle* 0)
   (loop for j from 0 upto 19
         do (progn
              (setf (aref status-mass j) 1)))
   (setf *fade-clarity* 0)
   (setf *win-game1* 0)
+  (setf *stroka1* *key16*)
   )
 
 
@@ -93,6 +86,7 @@
            (loop for j from 0 upto 19
                  do (progn
                       (setf (aref status-mass j) 1)))
+		    (setf *stroka1* *key17*)
            )))
   
   (setf *x-circle* (+ *x-circle* *dx-circle*))
@@ -158,17 +152,25 @@
 
 (defun end-game1 ()
   (if (every #'zerop status-mass)
-      (and (setf *t0* (real-time-seconds))
-	  (setf *win-game1* 1))
-	  ))
+	  (and (setf *win-game1* 1)
+	  (setf *stroka1* *key18*)
+	  (setf *x-paddle* (- (+ *x-canvas* (/ *width-canvas* 2) (/ *cant* 2)) (/ *width-paddle* 2)))
+      (setf *y-paddle* (+ *y-canvas* (/ *cant* 2) *height-indent*))
+	  (setf *dx-circle* 0)
+      (setf *dy-circle* 0)
+	  (setf *pozitionx-girl* (- (+ *x-canvas* (/ *width-canvas* 2)) *radius* 3))
+      (setf *pozitiony-girl* (- (+ *y-canvas* (/ *cant* 2) *radius* *height-paddle* *height-indent*) *radius* 4))
+	  (setf *x-circle* -100)
+      (setf *y-circle* -100)
+	  )))
 
 
 (defmethod fistmage:act ((this game1-state))
   (with-slots (started-at) this
-    (if (= *win-game1* 1)
+    (if (= *win-game1* 2)
     (and (setf *fade-clarity* (/ (- (real-time-seconds) *t0* 5) 1))
     (when (> (- (real-time-seconds) *t0*) 1)
-      (fistmage:transition-to 'cut2-state))))))
+      (fistmage:transition-to 'cut17-state))))))
 
 
 (defmethod fistmage:draw ((this game1-state))
@@ -177,6 +179,10 @@
     (circle-move)
     (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4))
     (draw-image (vec2 70 70) :girl)
+	(draw-text *stroka1* (vec2 420 600)
+               :fill-color (vec4 0.4 0.2 0.2 1)
+               :font *bubble-font*
+               )
     (draw-rect (vec2 *x-canvas* *y-canvas*) (+ *width-canvas* *cant*) (+ *height-canvas* *cant*)
                :fill-paint (vec4 1 1 1 0.5)
                :thickness *cant*
@@ -190,7 +196,8 @@
     (draw-bricks)
     (draw-circle (vec2 *x-circle* *y-circle*) *radius*
                  :fill-paint (vec4 0 0.8 0 0.9))
-    (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0 0 0 *fade-clarity*))
+    (draw-image (vec2 *pozitionx-girl* *pozitiony-girl*) :girl-mini)
+	(draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0 0 0 *fade-clarity*))
     ))
              
 

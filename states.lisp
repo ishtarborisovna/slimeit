@@ -5,13 +5,17 @@
  "c:/portacle/projects/slimeit/art/")
 
 (define-font :fonty "12454.ttf")
-(define-font :fonty2 "11185.ttf")
+(define-font :fonty2 "12420.ttf")
+(define-font :fonty3 "11618.ttf")
 (defparameter *fancy-font* nil)
 (defparameter *bubble-font* nil)
 (defparameter *language-font* nil)
+(defparameter *evil-font* nil)
 (defparameter *t0* 0)
 (define-image :girl "girl2_300.png")
 (define-image :bubble "bubble2.png")
+(define-image :girl-mini "girl2_mini.png")
+(define-image :girl-mini-dead "girl2_mini_dead.png")
 (defparameter *language* 0)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -22,8 +26,9 @@
 
 (defmethod initialize-instance :after ((this start-state) &key)
   (setf *fancy-font* (make-font :fonty 180))
-  (setf *bubble-font* (make-font :fonty2 40))
+  (setf *bubble-font* (make-font :fonty2 32))
   (setf *language-font* (make-font :fonty 60))
+  (setf *evil-font* (make-font :fonty3 70))
   (setf *t0* (real-time-seconds))
   )
 

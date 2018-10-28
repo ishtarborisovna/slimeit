@@ -21,7 +21,7 @@
   (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4))
   (draw-image (vec2 70 70) :girl)
   (draw-image (vec2 370 380) :bubble)
-  (draw-text *key1* (vec2 420 550)
+  (draw-text *key1* (vec2 220 600)
              :fill-color (vec4 0.4 0.2 0.2 1)
              :font *bubble-font*
              )
@@ -43,7 +43,7 @@
   (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4))
   (draw-image (vec2 70 70) :girl)
   (draw-image (vec2 370 380) :bubble)
-  (draw-text *key2* (vec2 420 550)
+  (draw-text *key2* (vec2 220 600)
              :fill-color (vec4 0.4 0.2 0.2 1)
              :font *bubble-font*
              )
@@ -64,7 +64,7 @@
   (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4))
   (draw-image (vec2 70 70) :girl)
   (draw-image (vec2 370 380) :bubble)
-  (draw-text *key3* (vec2 420 550)
+  (draw-text *key3* (vec2 220 600)
              :fill-color (vec4 0.4 0.2 0.2 1)
              :font *bubble-font*
              )
@@ -78,45 +78,20 @@
 
 
 (defmethod fistmage:button-pressed ((this cut5-state) (button (eql :space)))
-  (fistmage:transition-to 'game1-state))
+  (fistmage:transition-to 'fail1-state))
 
 
 (defmethod fistmage:draw ((this cut5-state))
   (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4))
   (draw-image (vec2 70 70) :girl)
   (draw-image (vec2 370 380) :bubble)
-  (draw-text *key4* (vec2 420 550)
+  (draw-text *key4* (vec2 220 600)
              :fill-color (vec4 0.4 0.2 0.2 1)
              :font *bubble-font*
              )
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
