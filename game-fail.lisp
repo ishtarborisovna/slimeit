@@ -28,11 +28,11 @@
 (defparameter *height-indent-brick* 12)
 (defparameter status-mass (make-array '(20)))
 (defparameter *win-game1* 0)
-(defparameter *pozition-big-girl* 70)
+(defparameter *pozition-big-girl* 30)
 (defparameter *pozitionx-dead-girl* -70)
 (defparameter *pozitiony-dead-girl* -70)
 (defparameter *caunter* 0)
-(defparameter *stroka-fail* nil)
+(defparameter *stroka-fail* "...")
 
 
 (defmethod initialize-instance :after ((this fail1-state) &key)
@@ -44,8 +44,8 @@
                  (if (= *caunter* 1)
                      (and (setf *dx-circle* 1)
                           (setf *dy-circle* 1)
-                          (setf *stroka-fail* " ")
-                          (setf *pozition-big-girl* -200)
+                          (setf *stroka-fail* "...")
+                          (setf *pozition-big-girl* -250)
 			  (setf *caunter* 2)))
 
                  ))
@@ -104,8 +104,8 @@
 (defmethod fistmage:draw ((this fail1-state))
   (with-slots (started-at) this
     (circle-move-fail)
-    (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4))
-    (draw-image (vec2 *pozition-big-girl* 70) :girl)
+    (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4) :thickness 20 :stroke-paint (vec4 0.6 0.7 0.5 1))
+    (draw-image (vec2 *pozition-big-girl* 10) :girl-look)
     (draw-rect (vec2 *x-canvas* *y-canvas*) (+ *width-canvas* *cant*) (+ *height-canvas* *cant*)
                :fill-paint (vec4 1 1 1 0.5)
                :thickness *cant*
@@ -117,7 +117,7 @@
                :rounding 5
                )
     (draw-bricks-fail)
-    (draw-text *stroka-fail* (vec2 420 600)
+    (draw-text *stroka-fail* (vec2 40 680)
                :fill-color (vec4 0.4 0.2 0.2 1)
                :font *bubble-font*
                )

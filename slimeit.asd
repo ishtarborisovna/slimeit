@@ -13,4 +13,6 @@
 			   (:file "intrigue")
 			   (:file "game-fail")
 			   (:file "depressia")
+			   (:file "game2-states")
+			   (:file "end-states")
                (:file "game")))

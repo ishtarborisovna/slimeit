@@ -18,10 +18,9 @@
 
 (defmethod fistmage:draw ((this cut2-state))
   (show-fade-off6)
-  (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4))
-  (draw-image (vec2 70 70) :girl)
-  (draw-image (vec2 370 380) :bubble)
-  (draw-text *key1* (vec2 220 600)
+  (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4) :thickness 20 :stroke-paint (vec4 0.6 0.7 0.5 1))
+  (draw-image (vec2 30 10) :girl)
+  (draw-text *key1* (vec2 40 650)
              :fill-color (vec4 0.4 0.2 0.2 1)
              :font *bubble-font*
              )
@@ -40,10 +39,10 @@
 
 
 (defmethod fistmage:draw ((this cut3-state))
-  (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4))
-  (draw-image (vec2 70 70) :girl)
-  (draw-image (vec2 370 380) :bubble)
-  (draw-text *key2* (vec2 220 600)
+  (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4) :thickness 20 :stroke-paint (vec4 0.6 0.7 0.5 1))
+  (draw-image (vec2 30 10) :girl)
+   
+  (draw-text *key2* (vec2 40 650)
              :fill-color (vec4 0.4 0.2 0.2 1)
              :font *bubble-font*
              )
@@ -61,10 +60,10 @@
 
 
 (defmethod fistmage:draw ((this cut4-state))
-  (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4))
-  (draw-image (vec2 70 70) :girl)
-  (draw-image (vec2 370 380) :bubble)
-  (draw-text *key3* (vec2 220 600)
+  (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4) :thickness 20 :stroke-paint (vec4 0.6 0.7 0.5 1))
+  (draw-image (vec2 30 10) :girl)
+   
+  (draw-text *key3* (vec2 40 650)
              :fill-color (vec4 0.4 0.2 0.2 1)
              :font *bubble-font*
              )
@@ -82,10 +81,10 @@
 
 
 (defmethod fistmage:draw ((this cut5-state))
-  (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4))
-  (draw-image (vec2 70 70) :girl)
-  (draw-image (vec2 370 380) :bubble)
-  (draw-text *key4* (vec2 220 600)
+  (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4) :thickness 20 :stroke-paint (vec4 0.6 0.7 0.5 1))
+  (draw-image (vec2 30 10) :girl)
+   
+  (draw-text *key4* (vec2 40 650)
              :fill-color (vec4 0.4 0.2 0.2 1)
              :font *bubble-font*
              )
