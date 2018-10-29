@@ -169,7 +169,7 @@
     (if (= *win-game1* 2)
     (and (setf *fade-clarity* (/ (- (real-time-seconds) *t0* 5) 1))
     (when (> (- (real-time-seconds) *t0*) 1)
-      (fistmage:transition-to 'cut22-state))))))
+      (fistmage:transition-to 'cut21-state))))))
 
 
 (defmethod fistmage:draw ((this game1-state))
@@ -178,7 +178,11 @@
     (circle-move)
     (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0.3 1 0 0.4) :thickness 20 :stroke-paint (vec4 0.6 0.7 0.5 1))
     (draw-image (vec2 30 10) :girl-look)
-	(draw-text *stroka1* (vec2 40 680)
+	(draw-text *key16* (vec2 40 680)
+               :fill-color (vec4 0.4 0.2 0.2 1)
+               :font *bubble-font*
+               )
+	(draw-text *key16-2* (vec2 40 630)
                :fill-color (vec4 0.4 0.2 0.2 1)
                :font *bubble-font*
                )

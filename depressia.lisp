@@ -84,6 +84,10 @@
              :fill-color (vec4 0.4 0.2 0.2 1)
              :font *bubble-font*
              )
+	(draw-text *key10-2* (vec2 40 600)
+             :fill-color (vec4 0.4 0.2 0.2 1)
+             :font *bubble-font*
+             )
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -196,6 +200,27 @@
              )
   )
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defclass cut21-state ()
+  ((started-at :initform (real-time-seconds))))
+
+
+(defmethod fistmage:button-pressed ((this cut21-state) (button (eql :space)))
+  (fistmage:transition-to 'cut22-state))
+
+
+(defmethod fistmage:draw ((this cut21-state))
+  (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0 0 0 1))
+  (draw-text *key18* (vec2 40 400)
+               :fill-color (vec4 0 0.8 0 1)
+               :font *evil-font*
+             )
+  )
+  
+  
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 

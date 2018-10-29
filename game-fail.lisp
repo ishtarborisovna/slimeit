@@ -117,7 +117,11 @@
                :rounding 5
                )
     (draw-bricks-fail)
-    (draw-text *stroka-fail* (vec2 40 680)
+    (draw-text *key5* (vec2 40 680)
+               :fill-color (vec4 0.4 0.2 0.2 1)
+               :font *bubble-font*
+               )
+	(draw-text *key5-2* (vec2 40 630)
                :fill-color (vec4 0.4 0.2 0.2 1)
                :font *bubble-font*
                )

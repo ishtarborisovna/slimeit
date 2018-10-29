@@ -38,6 +38,10 @@
              :fill-color (vec4 0.4 0.2 0.2 1)
              :font *bubble-font*
              )
+   (draw-text *key24-2* (vec2 40 600)
+             :fill-color (vec4 0.4 0.2 0.2 1)
+             :font *bubble-font*
+             )
   )
 
 

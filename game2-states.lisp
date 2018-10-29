@@ -2,7 +2,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
 (defclass game2-state ()
   ((started-at :initform (real-time-seconds))))
 
@@ -168,9 +167,8 @@
 (defmethod fistmage:act ((this game2-state))
   (with-slots (started-at) this
     (if (= *win-game1* 2)
-    (and (setf *fade-clarity* (/ (- (real-time-seconds) *t0* 5) 1))
-    (when (> (- (real-time-seconds) *t0*) 1)
-      (fistmage:transition-to 'cut27-state))))))
+        (when (> (- (real-time-seconds) *t0*) 1)
+          (fistmage:transition-to 'cut27-state)))))
 
 
 (defmethod fistmage:draw ((this game2-state))
