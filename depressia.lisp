@@ -214,7 +214,19 @@
 
 (defmethod fistmage:draw ((this cut21-state))
   (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0 0 0 1))
-  (draw-text *key18* (vec2 40 400)
+  (draw-text *key18* (vec2 40 450)
+               :fill-color (vec4 0 0.8 0 1)
+               :font *evil-font*
+             )
+  (draw-text *key18-2* (vec2 40 400)
+               :fill-color (vec4 0 0.8 0 1)
+               :font *evil-font*
+             )
+  (draw-text *key18-2-2* (vec2 40 350)
+               :fill-color (vec4 0 0.8 0 1)
+               :font *evil-font*
+             )
+  (draw-text *key18-3* (vec2 40 250)
                :fill-color (vec4 0 0.8 0 1)
                :font *evil-font*
              )

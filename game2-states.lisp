@@ -161,14 +161,14 @@
       (setf *pozitiony-girl* (- (+ *y-canvas* (/ *cant* 2) *radius* *height-paddle* *height-indent*) *radius* 4))
 	  (setf *x-circle* -100)
       (setf *y-circle* -100)
+	  (setf *t0* (real-time-seconds))
 	  )))
 
 
 (defmethod fistmage:act ((this game2-state))
   (with-slots (started-at) this
-    (if (= *win-game1* 2)
-        (when (> (- (real-time-seconds) *t0*) 1)
-          (fistmage:transition-to 'cut27-state)))))
+    (when (= *win-game1* 1)
+      (fistmage:transition-to 'cut26-state))))
 
 
 (defmethod fistmage:draw ((this game2-state))
@@ -195,10 +195,11 @@
     (draw-circle (vec2 *x-circle* *y-circle*) *radius*
                  :fill-paint (vec4 0 0.8 0 0.9))
 	(draw-image (vec2 *pozitionx-girl* *pozitiony-girl*) :girl-mini)
-	(draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0 0 0 *fade-clarity*))
+    (draw-rect (vec2 0 0) 1024 768 :fill-paint (vec4 0 0 0 *fade-clarity*))
     ))
              
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 
